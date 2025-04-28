@@ -1,0 +1,40 @@
+.appointment-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.patient-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#authSection {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#editAppointmentForm {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-item button, .patient-item button, #authSection button {
+    margin-right: 0.5rem;
+}
+
+#authSection form {
+    margin-bottom: 1rem;
+}
+
+#toggleAuth {
+    display: inline-block;
+    margin-top: 0.5rem;
+}
