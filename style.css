@@ -38,3 +38,22 @@
     display: inline-block;
     margin-top: 0.5rem;
 }
+.stat-card {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.stat-title {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    color: #111827;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
