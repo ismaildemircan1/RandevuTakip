@@ -104,6 +104,28 @@
                 <h3 class="text-lg font-semibold">Hasta Arama</h3>
                 <input type="text" id="patientSearch" class="w-full p-2 border rounded mb-2" placeholder="Hasta adına göre ara">
             </div>
+            <!-- Doktor Öneri Ekranı -->
+            <div class="mb-6 bg-white p-6 rounded shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Doktor Öneri Ekranı</h3>
+                <form id="doctorRecommendationForm" class="grid gap-3 md:grid-cols-3">
+                    <select id="symptomSelect" class="p-2 border rounded" required>
+                        <option value="">Belirti seçin</option>
+                        <option value="ates">Ateş / Boğaz ağrısı</option>
+                        <option value="goz">Göz problemleri</option>
+                        <option value="cilt">Cilt şikayetleri</option>
+                        <option value="kalp">Göğüs ağrısı / çarpıntı</option>
+                        <option value="kemik">Bel / eklem ağrısı</option>
+                    </select>
+                    <select id="citySelect" class="p-2 border rounded" required>
+                        <option value="">Şehir seçin</option>
+                        <option value="istanbul">İstanbul</option>
+                        <option value="ankara">Ankara</option>
+                        <option value="izmir">İzmir</option>
+                    </select>
+                    <button type="submit" class="bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600">Önerileri Getir</button>
+                </form>
+                <div id="doctorRecommendationList" class="doctor-list mt-4"></div>
+            </div>
             <!-- Hasta Listesi -->
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Hasta Kayıtları</h3>
