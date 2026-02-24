@@ -13,6 +13,84 @@ const firebaseConfig = {
   
   let appointments = [];
   let patients = [];
+
+const doctorMap = {
+    ates: 'Dahiliye',
+    goz: 'Göz Hastalıkları',
+    cilt: 'Dermatoloji',
+    kalp: 'Kardiyoloji',
+    kemik: 'Ortopedi'
+};
+
+const doctorsByCity = {
+    istanbul: {
+        'Dahiliye': [
+            { name: 'Dr. Ayşe Demir', hospital: 'Acıbadem Hastanesi', score: 4.8 },
+            { name: 'Dr. Burak Kaya', hospital: 'Medical Park', score: 4.6 }
+        ],
+        'Göz Hastalıkları': [
+            { name: 'Dr. Elif Öztürk', hospital: 'Dünya Göz', score: 4.9 },
+            { name: 'Dr. Cem Arslan', hospital: 'Florence Nightingale', score: 4.7 }
+        ],
+        Dermatoloji: [
+            { name: 'Dr. Selin Aydın', hospital: 'Memorial', score: 4.7 },
+            { name: 'Dr. Tolga Koç', hospital: 'Acıbadem', score: 4.5 }
+        ],
+        Kardiyoloji: [
+            { name: 'Dr. Deniz Kara', hospital: 'Koç Üniversitesi Hastanesi', score: 4.9 },
+            { name: 'Dr. Melih Eren', hospital: 'Liv Hospital', score: 4.8 }
+        ],
+        Ortopedi: [
+            { name: 'Dr. Okan Yılmaz', hospital: 'Amerikan Hastanesi', score: 4.7 },
+            { name: 'Dr. Eda Gür', hospital: 'Medicana', score: 4.6 }
+        ]
+    },
+    ankara: {
+        Dahiliye: [
+            { name: 'Dr. Onur Şahin', hospital: 'Ankara Şehir Hastanesi', score: 4.8 },
+            { name: 'Dr. Gül Çetin', hospital: 'Güven Hastanesi', score: 4.6 }
+        ],
+        'Göz Hastalıkları': [
+            { name: 'Dr. Ezgi Tunç', hospital: 'Dünyagöz Ankara', score: 4.7 },
+            { name: 'Dr. Emre Yalın', hospital: 'Memorial Ankara', score: 4.5 }
+        ],
+        Dermatoloji: [
+            { name: 'Dr. Naz Uçar', hospital: 'TOBB ETÜ Hastanesi', score: 4.7 },
+            { name: 'Dr. Merve Er', hospital: 'LÖSANTE', score: 4.6 }
+        ],
+        Kardiyoloji: [
+            { name: 'Dr. Hakan Özer', hospital: 'Bilkent Şehir Hastanesi', score: 4.8 },
+            { name: 'Dr. Sibel Akın', hospital: 'Bayındır Hastanesi', score: 4.6 }
+        ],
+        Ortopedi: [
+            { name: 'Dr. Kaan Kurt', hospital: 'Koru Hastanesi', score: 4.7 },
+            { name: 'Dr. İrem Uysal', hospital: 'Medicana Ankara', score: 4.5 }
+        ]
+    },
+    izmir: {
+        Dahiliye: [
+            { name: 'Dr. Zeynep Ak', hospital: 'Ege Üniversitesi Hastanesi', score: 4.8 },
+            { name: 'Dr. Fırat Topal', hospital: 'Kent Hastanesi', score: 4.6 }
+        ],
+        'Göz Hastalıkları': [
+            { name: 'Dr. Banu Işık', hospital: 'Kaşkaloğlu Göz Hastanesi', score: 4.9 },
+            { name: 'Dr. Alihan Kılıç', hospital: 'Ekol Hastanesi', score: 4.5 }
+        ],
+        Dermatoloji: [
+            { name: 'Dr. Pınar Aslan', hospital: 'Medical Point', score: 4.7 },
+            { name: 'Dr. Bora Çakır', hospital: 'Dokuz Eylül Hastanesi', score: 4.6 }
+        ],
+        Kardiyoloji: [
+            { name: 'Dr. Barış Sezer', hospital: 'İzmir Şehir Hastanesi', score: 4.8 },
+            { name: 'Dr. Nihan Sarı', hospital: 'Özel Can Hastanesi', score: 4.6 }
+        ],
+        Ortopedi: [
+            { name: 'Dr. Berke Tunç', hospital: 'Tepecik Eğitim Araştırma', score: 4.7 },
+            { name: 'Dr. İpek Ekin', hospital: 'Batı Anadolu Hastanesi', score: 4.5 }
+        ]
+    }
+};
+
   
   auth.onAuthStateChanged(user => {
       const authSection = document.getElementById('authSection');
@@ -277,7 +355,42 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  
+
+document.getElementById('doctorRecommendationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const symptom = document.getElementById('symptomSelect').value;
+    const city = document.getElementById('citySelect').value;
+
+    if (!symptom || !city) {
+        alert('Lütfen belirti ve şehir seçin.');
+        return;
+    }
+
+    renderDoctorRecommendations(symptom, city);
+});
+
+function renderDoctorRecommendations(symptom, city) {
+    const list = document.getElementById('doctorRecommendationList');
+    const branch = doctorMap[symptom];
+    const doctors = (doctorsByCity[city] && doctorsByCity[city][branch]) || [];
+
+    if (!doctors.length) {
+        list.innerHTML = `<p class="text-sm text-gray-600">Seçtiğiniz kriterler için doktor bulunamadı.</p>`;
+        return;
+    }
+
+    list.innerHTML = doctors.map(doctor => `
+        <div class="doctor-item">
+            <p><strong>Bölüm:</strong> ${branch}</p>
+            <p><strong>Doktor:</strong> ${doctor.name}</p>
+            <p><strong>Hastane:</strong> ${doctor.hospital}</p>
+            <p><strong>Puan:</strong> ⭐ ${doctor.score}</p>
+        </div>
+    `).join('');
+}
+
+document.getElementById('patientSearch').addEventListener('input', async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
