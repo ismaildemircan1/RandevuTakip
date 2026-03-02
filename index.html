@@ -56,6 +56,10 @@
                     <input type="tel" id="patientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
                 </div>
                 <div class="mb-4">
+                    <label for="patientTc" class="block text-sm font-medium">TC Kimlik Numarası</label>
+                    <input type="text" id="patientTc" class="w-full p-2 border rounded" placeholder="11 haneli TC Kimlik No" maxlength="11" inputmode="numeric" required>
+                </div>
+                <div class="mb-4">
                     <label for="patientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
                     <input type="text" id="patientAddress" class="w-full p-2 border rounded" placeholder="Adres">
                 </div>
@@ -78,6 +82,10 @@
                     <input type="tel" id="editPatientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
                 </div>
                 <div class="mb-4">
+                    <label for="editPatientTc" class="block text-sm font-medium">TC Kimlik Numarası</label>
+                    <input type="text" id="editPatientTc" class="w-full p-2 border rounded" placeholder="11 haneli TC Kimlik No" maxlength="11" inputmode="numeric" required>
+                </div>
+                <div class="mb-4">
                     <label for="editPatientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
                     <input type="text" id="editPatientAddress" class="w-full p-2 border rounded" placeholder="Adres">
                 </div>
@@ -94,6 +102,9 @@
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Ödeme Onayı</h3>
                 <form id="paymentForm" class="mt-2">
+                    <select id="paymentAppointmentId" class="w-full p-2 border rounded mb-2" required>
+                        <option value="">Ödeme yapılacak randevuyu seçin</option>
+                    </select>
                     <input type="text" id="cardNumber" class="w-full p-2 border rounded mb-2" placeholder="Kart Numarası (Demo)" required>
                     <input type="number" id="paymentAmount" class="w-full p-2 border rounded mb-2" placeholder="Ödeme Tutarı (TL)" required>
                     <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Yap</button>
@@ -112,6 +123,32 @@
             <!-- Randevu Listesi -->
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Randevular</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 my-3" id="appointmentStats">
+                    <div class="stat-card">
+                        <p class="stat-title">Toplam</p>
+                        <p id="statTotal" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">Bugün</p>
+                        <p id="statToday" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">Onaylı</p>
+                        <p id="statConfirmed" class="stat-value">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-title">İptal</p>
+                        <p id="statCancelled" class="stat-value">0</p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <select id="appointmentFilter" class="w-full p-2 border rounded">
+                        <option value="all">Tüm randevular</option>
+                        <option value="confirmed">Sadece onaylı</option>
+                        <option value="cancelled">Sadece iptal edilenler</option>
+                        <option value="today">Sadece bugün</option>
+                    </select>
+                </div>
                 <div id="appointmentList" class="appointment-list"></div>
             </div>
         </div>
