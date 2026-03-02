@@ -102,6 +102,9 @@
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Ödeme Onayı</h3>
                 <form id="paymentForm" class="mt-2">
+                    <select id="paymentAppointmentId" class="w-full p-2 border rounded mb-2" required>
+                        <option value="">Ödeme yapılacak randevuyu seçin</option>
+                    </select>
                     <input type="text" id="cardNumber" class="w-full p-2 border rounded mb-2" placeholder="Kart Numarası (Demo)" required>
                     <input type="number" id="paymentAmount" class="w-full p-2 border rounded mb-2" placeholder="Ödeme Tutarı (TL)" required>
                     <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Yap</button>

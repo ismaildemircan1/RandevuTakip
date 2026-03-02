@@ -183,8 +183,14 @@ document.getElementById('appointmentForm').addEventListener('submit', async func
 
 document.getElementById('paymentForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    const selectedAppointmentId = parseInt(document.getElementById('paymentAppointmentId').value, 10);
     const cardNumber = document.getElementById('cardNumber').value;
     const amount = parseFloat(document.getElementById('paymentAmount').value);
+
+    if (Number.isNaN(selectedAppointmentId)) {
+        alert('Lütfen ödeme yapılacak randevuyu seçin!');
+        return;
+    }
 
     if (cardNumber.length < 16 || isNaN(amount) || amount <= 0) {
         alert('Geçerli kart numarası (en az 16 hane) ve ödeme tutarı girin!');
@@ -199,16 +205,22 @@ document.getElementById('paymentForm').addEventListener('submit', async function
         });
         const data = await response.json();
 
-        if (data.success && appointments.length > 0) {
-            const latestAppointment = appointments[appointments.length - 1];
-            latestAppointment.paymentStatus = 'paid';
-            latestAppointment.paymentAmount = amount;
-            await db.collection('appointments').doc(latestAppointment.id.toString()).update({
+        if (data.success) {
+            const appointmentToPay = appointments.find(apt => apt.id === selectedAppointmentId);
+
+            if (!appointmentToPay) {
+                alert('Seçilen randevu bulunamadı. Lütfen listeyi yenileyip tekrar deneyin.');
+                return;
+            }
+
+            appointmentToPay.paymentStatus = 'paid';
+            appointmentToPay.paymentAmount = amount;
+            await db.collection('appointments').doc(appointmentToPay.id.toString()).update({
                 paymentStatus: 'paid',
                 paymentAmount: amount
             });
-            alert(`Ödeme başarılı (Demo): ${amount} TL`);
-            renderAppointments();
+            alert(`${appointmentToPay.patientName} için ödeme başarılı (Demo): ${amount} TL`);
+            await renderAppointments();
             this.reset();
         } else {
             alert('Ödeme başarısız: ' + data.error);
@@ -230,6 +242,7 @@ async function renderAppointments() {
         });
 
         appointments.sort((a, b) => new Date(a.appointmentTime) - new Date(b.appointmentTime));
+        renderPaymentAppointmentOptions();
         updateAppointmentStats();
         renderAppointmentList();
         checkReminders();
@@ -260,6 +273,31 @@ function getFilteredAppointments() {
     }
 
     return appointments;
+}
+
+
+function renderPaymentAppointmentOptions() {
+    const paymentAppointmentSelect = document.getElementById('paymentAppointmentId');
+
+    if (!paymentAppointmentSelect) {
+        return;
+    }
+
+    const previousSelection = paymentAppointmentSelect.value;
+    paymentAppointmentSelect.innerHTML = '<option value="">Ödeme yapılacak randevuyu seçin</option>';
+
+    appointments
+        .filter(apt => apt.status !== 'cancelled')
+        .forEach(apt => {
+            const option = document.createElement('option');
+            option.value = apt.id.toString();
+            option.textContent = `${apt.patientName} - ${new Date(apt.appointmentTime).toLocaleString('tr-TR')}`;
+            paymentAppointmentSelect.appendChild(option);
+        });
+
+    if (previousSelection && [...paymentAppointmentSelect.options].some(option => option.value === previousSelection)) {
+        paymentAppointmentSelect.value = previousSelection;
+    }
 }
 
 function renderAppointmentList() {
