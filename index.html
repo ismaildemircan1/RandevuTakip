@@ -8,117 +8,167 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto mt-10 max-w-2xl">
+    <div class="container mx-auto mt-10 max-w-5xl px-4 pb-12">
         <h2 class="text-2xl font-bold text-center mb-6">Randevu Takip Sistemi</h2>
-        <!-- Kullanıcı Giriş/Kayıt Formu -->
+
         <div id="authSection" class="bg-white p-6 rounded shadow-md mb-6">
             <h3 class="text-lg font-semibold mb-4" id="authTitle">Giriş Yap</h3>
-            <div id="userInfo" class="hidden mb-4"></div>
-            <!-- Giriş Formu -->
+            <div id="userInfo" class="hidden mb-2"></div>
+            <div id="roleInfo" class="hidden mb-4 text-sm text-gray-600"></div>
+
             <form id="loginForm" class="mb-4">
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded" placeholder="E-posta" required>
+                    <input type="email" id="email" class="w-full p-2 border rounded" required>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="password" class="w-full p-2 border rounded" placeholder="Şifre" required>
+                    <input type="password" id="password" class="w-full p-2 border rounded" required>
                 </div>
                 <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Giriş Yap</button>
             </form>
-            <!-- Kayıt Formu -->
+
             <form id="registerForm" class="mb-4 hidden">
                 <div class="mb-4">
                     <label for="registerEmail" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="registerEmail" class="w-full p-2 border rounded" placeholder="E-posta" required>
+                    <input type="email" id="registerEmail" class="w-full p-2 border rounded" required>
                 </div>
                 <div class="mb-4">
                     <label for="registerPassword" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="registerPassword" class="w-full p-2 border rounded" placeholder="Şifre (min 6 karakter)" required>
+                    <input type="password" id="registerPassword" class="w-full p-2 border rounded" placeholder="Min. 6 karakter" required>
+                </div>
+                <div class="mb-4">
+                    <label for="registerRole" class="block text-sm font-medium">Rol</label>
+                    <select id="registerRole" class="w-full p-2 border rounded">
+                        <option value="secretary">Sekreter</option>
+                        <option value="doctor">Doktor</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
                 <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Kayıt Ol</button>
             </form>
-            <p class="text-center">
-                <a href="#" id="toggleAuth" class="text-blue-500 hover:underline">Kayıt Ol</a>
-            </p>
+
+            <p class="text-center"><a href="#" id="toggleAuth" class="text-blue-500 hover:underline">Kayıt Ol</a></p>
             <button id="logoutButton" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 hidden">Çıkış Yap</button>
         </div>
-        <!-- İçerik (Giriş yapılmadan gizli) -->
+
         <div id="contentSection" class="hidden">
-            <!-- Randevu Oluşturma Formu -->
+            <div id="notificationCenter" class="bg-white p-4 rounded shadow-md mb-6"></div>
+            <div id="reportPanel" class="bg-white p-4 rounded shadow-md mb-6"></div>
+
             <form id="appointmentForm" class="bg-white p-6 rounded shadow-md mb-6">
-                <div class="mb-4">
-                    <label for="patientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="patientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
+                <h3 class="text-lg font-semibold mb-4">Randevu Oluştur</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="patientName" class="block text-sm font-medium">Hasta Adı</label>
+                        <input type="text" id="patientName" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label for="doctorName" class="block text-sm font-medium">Doktor</label>
+                        <input type="text" id="doctorName" class="w-full p-2 border rounded" placeholder="Dr. Ad Soyad" required>
+                    </div>
+                    <div>
+                        <label for="patientPhone" class="block text-sm font-medium">Telefon</label>
+                        <input type="tel" id="patientPhone" class="w-full p-2 border rounded" placeholder="+905xxxxxxxxx" required>
+                    </div>
+                    <div>
+                        <label for="appointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
+                        <input type="datetime-local" id="appointmentTime" class="w-full p-2 border rounded" required>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label for="patientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="patientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
+                <div class="mt-4">
+                    <label for="patientAddress" class="block text-sm font-medium">Adres</label>
+                    <input type="text" id="patientAddress" class="w-full p-2 border rounded">
                 </div>
-                <div class="mb-4">
-                    <label for="patientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="patientAddress" class="w-full p-2 border rounded" placeholder="Adres">
+                <div class="mt-4">
+                    <label for="appointmentNote" class="block text-sm font-medium">Not</label>
+                    <textarea id="appointmentNote" class="w-full p-2 border rounded" rows="2" placeholder="Hasta geçmişi / tetkik notu"></textarea>
                 </div>
-                <div class="mb-4">
-                    <label for="appointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
-                    <input type="datetime-local" id="appointmentTime" class="w-full p-2 border rounded" required>
+                <div class="mt-4">
+                    <label for="attachmentUrl" class="block text-sm font-medium">Dosya Linki (PDF vb.)</label>
+                    <input type="url" id="attachmentUrl" class="w-full p-2 border rounded" placeholder="https://...">
                 </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Randevu Oluştur</button>
+                <button type="submit" class="mt-4 w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Randevu Oluştur</button>
             </form>
-            <!-- Randevu Düzenleme Formu -->
+
             <form id="editAppointmentForm" class="bg-white p-6 rounded shadow-md mb-6 hidden">
                 <h3 class="text-lg font-semibold mb-4">Randevu Düzenle</h3>
                 <input type="hidden" id="editAppointmentId">
-                <div class="mb-4">
-                    <label for="editPatientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="editPatientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
-                </div>
-                <div class="mb-4">
-                    <label for="editPatientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="editPatientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
-                </div>
-                <div class="mb-4">
-                    <label for="editPatientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="editPatientAddress" class="w-full p-2 border rounded" placeholder="Adres">
-                </div>
-                <div class="mb-4">
-                    <label for="editAppointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <input type="text" id="editPatientName" class="w-full p-2 border rounded" required>
+                    <input type="text" id="editDoctorName" class="w-full p-2 border rounded" required>
+                    <input type="tel" id="editPatientPhone" class="w-full p-2 border rounded" required>
                     <input type="datetime-local" id="editAppointmentTime" class="w-full p-2 border rounded" required>
                 </div>
-                <div class="flex justify-between">
+                <input type="text" id="editPatientAddress" class="w-full p-2 border rounded mt-3" placeholder="Adres">
+                <textarea id="editAppointmentNote" class="w-full p-2 border rounded mt-3" rows="2" placeholder="Not"></textarea>
+                <input type="url" id="editAttachmentUrl" class="w-full p-2 border rounded mt-3" placeholder="Dosya URL">
+                <div class="flex justify-between mt-4">
                     <button type="submit" class="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Kaydet</button>
                     <button type="button" id="cancelEdit" class="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">İptal</button>
                 </div>
             </form>
-            <!-- Ödeme Formu -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Ödeme Onayı</h3>
+
+            <div class="bg-white p-6 rounded shadow-md mb-6">
+                <h3 class="text-lg font-semibold">Ödeme</h3>
                 <form id="paymentForm" class="mt-2">
-                    <input type="text" id="cardNumber" class="w-full p-2 border rounded mb-2" placeholder="Kart Numarası (Demo)" required>
+                    <input type="text" id="paymentMethodId" class="w-full p-2 border rounded mb-2" placeholder="Stripe PaymentMethod ID" required>
                     <input type="number" id="paymentAmount" class="w-full p-2 border rounded mb-2" placeholder="Ödeme Tutarı (TL)" required>
-                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Yap</button>
+                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Al</button>
                 </form>
             </div>
-            <!-- Hasta Arama -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Hasta Arama</h3>
-                <input type="text" id="patientSearch" class="w-full p-2 border rounded mb-2" placeholder="Hasta adına göre ara">
+
+            <div class="bg-white p-6 rounded shadow-md mb-6">
+                <h3 class="text-lg font-semibold mb-3">Mesaj Şablonları</h3>
+                <select id="messageTemplate" class="w-full p-2 border rounded mb-2">
+                    <option value="reminder">Hatırlatma</option>
+                    <option value="cancel">İptal</option>
+                    <option value="update">Güncelleme</option>
+                </select>
+                <button id="sendTemplateButton" class="w-full bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600">Son randevuya şablon gönder</button>
             </div>
-            <!-- Hasta Listesi -->
+
+            <div class="bg-white p-6 rounded shadow-md mb-6">
+                <h3 class="text-lg font-semibold mb-2">Gelişmiş Hasta Filtreleme</h3>
+                <div class="grid md:grid-cols-4 gap-2">
+                    <input type="text" id="patientSearch" class="p-2 border rounded" placeholder="Ada göre ara">
+                    <input type="text" id="patientPhoneFilter" class="p-2 border rounded" placeholder="Telefona göre ara">
+                    <input type="date" id="fromDate" class="p-2 border rounded">
+                    <select id="paymentFilter" class="p-2 border rounded">
+                        <option value="all">Ödeme: Tümü</option>
+                        <option value="paid">Ödendi</option>
+                        <option value="pending">Bekliyor</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded shadow-md mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-lg font-semibold">Takvim</h3>
+                    <select id="calendarView" class="p-2 border rounded">
+                        <option value="day">Gün</option>
+                        <option value="week">Hafta</option>
+                        <option value="month" selected>Ay</option>
+                    </select>
+                </div>
+                <div id="calendarGrid" class="calendar-grid"></div>
+            </div>
+
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Hasta Kayıtları</h3>
                 <div id="patientList" class="patient-list"></div>
             </div>
-            <!-- Randevu Listesi -->
             <div class="mb-6">
                 <h3 class="text-lg font-semibold">Randevular</h3>
                 <div id="appointmentList" class="appointment-list"></div>
             </div>
         </div>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
