@@ -349,16 +349,20 @@ const firebaseConfig = {
           patientPhone = `+${patientPhone.replace(/^0/, '')}`;
       }
   
-      const updatedAppointment = {
-          id: parseInt(id),
-          patientName,
-          patientPhone,
-          patientAddress,
-          appointmentTime,
-          status: 'confirmed',
-          paymentStatus: appointments.find(a => a.id === parseInt(id)).paymentStatus,
-          paymentAmount: appointments.find(a => a.id === parseInt(id)).paymentAmount
-      };
+    // ⚡ Bolt: Cache parsed id and find() result to avoid redundant array traversals and type conversions
+    const parsedId = parseInt(id);
+    const existingAppointment = appointments.find(a => a.id === parsedId);
+
+    const updatedAppointment = {
+        id: parsedId,
+        patientName,
+        patientPhone,
+        patientAddress,
+        appointmentTime,
+        status: 'confirmed',
+        paymentStatus: existingAppointment ? existingAppointment.paymentStatus : 'pending',
+        paymentAmount: existingAppointment ? existingAppointment.paymentAmount : 0
+    };
   
       try {
           const patientRef = db.collection('patients').doc(patientPhone);
