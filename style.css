@@ -1,40 +1,34 @@
-.appointment-item {
-    background-color: white;
+body { font-family: Arial, sans-serif; }
+.hidden { display: none; }
+.appointment-item, .patient-item {
+    border: 1px solid #e5e7eb;
+    padding: 12px;
+    margin-bottom: 8px;
     border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #fff;
 }
-
-.patient-item {
-    background-color: white;
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+.calendar-cell {
+    border: 1px solid #d1d5db;
     border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-height: 120px;
+    background: #fafafa;
 }
-
-#authSection {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.calendar-event {
+    background: #dbeafe;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin-top: 4px;
+    font-size: 12px;
 }
-
-#editAppointmentForm {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.appointment-item button, .patient-item button, #authSection button {
-    margin-right: 0.5rem;
-}
-
-#authSection form {
-    margin-bottom: 1rem;
-}
-
-#toggleAuth {
-    display: inline-block;
-    margin-top: 0.5rem;
+.report-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px;
+    background: #f9fafb;
 }
