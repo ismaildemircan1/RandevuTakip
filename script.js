@@ -349,15 +349,19 @@ const firebaseConfig = {
           patientPhone = `+${patientPhone.replace(/^0/, '')}`;
       }
   
+      // ⚡ Bolt: Cache parsed ID and existing appointment to avoid redundant type conversions and O(N) array traversals
+      const parsedId = parseInt(id);
+      const existingAppointment = appointments.find(a => a.id === parsedId) || {};
+
       const updatedAppointment = {
-          id: parseInt(id),
+          id: parsedId,
           patientName,
           patientPhone,
           patientAddress,
           appointmentTime,
           status: 'confirmed',
-          paymentStatus: appointments.find(a => a.id === parseInt(id)).paymentStatus,
-          paymentAmount: appointments.find(a => a.id === parseInt(id)).paymentAmount
+          paymentStatus: existingAppointment.paymentStatus,
+          paymentAmount: existingAppointment.paymentAmount
       };
   
       try {
