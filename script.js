@@ -349,33 +349,38 @@ const firebaseConfig = {
           patientPhone = `+${patientPhone.replace(/^0/, '')}`;
       }
   
-      const updatedAppointment = {
-          id: parseInt(id),
-          patientName,
-          patientPhone,
-          patientAddress,
-          appointmentTime,
-          status: 'confirmed',
-          paymentStatus: appointments.find(a => a.id === parseInt(id)).paymentStatus,
-          paymentAmount: appointments.find(a => a.id === parseInt(id)).paymentAmount
-      };
-  
-      try {
-          const patientRef = db.collection('patients').doc(patientPhone);
-          const patientDoc = await patientRef.get();
-          if (patientDoc.exists) {
-              await patientRef.update({
-                  name: patientName,
-                  address: patientAddress || patientDoc.data().address
-              });
-          } else {
-              await patientRef.set({
-                  name: patientName,
-                  phone: patientPhone,
-                  address: patientAddress || '',
-                  appointmentIds: [parseInt(id)]
-              });
-          }
+    // Performance optimization: Cache the parsed ID and the appointment lookup to avoid
+    // redundant O(n) array traversals and repeated type conversions
+    const parsedId = parseInt(id);
+    const existingAppointment = appointments.find(a => a.id === parsedId);
+
+    const updatedAppointment = {
+        id: parsedId,
+        patientName,
+        patientPhone,
+        patientAddress,
+        appointmentTime,
+        status: 'confirmed',
+        paymentStatus: existingAppointment ? existingAppointment.paymentStatus : 'pending',
+        paymentAmount: existingAppointment ? existingAppointment.paymentAmount : 0
+    };
+
+    try {
+        const patientRef = db.collection('patients').doc(patientPhone);
+        const patientDoc = await patientRef.get();
+        if (patientDoc.exists) {
+            await patientRef.update({
+                name: patientName,
+                address: patientAddress || patientDoc.data().address
+            });
+        } else {
+            await patientRef.set({
+                name: patientName,
+                phone: patientPhone,
+                address: patientAddress || '',
+                appointmentIds: [parsedId]
+            });
+        }
   
           await db.collection('appointments').doc(id).update(updatedAppointment);
           await sendWhatsAppMessage(patientPhone, `Merhaba ${patientName}, randevunuz ${appointmentTime} olarak güncellendi.`);
