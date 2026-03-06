@@ -1,0 +1,3 @@
+## 2024-05-24 - Cache Object Lookups and Type Conversions to Avoid Redundant Processing
+**Learning:** Performing `parseInt()` and `Array.prototype.find()` redundantly inside object literals creates unnecessary processing overhead, especially for lists of substantial size, operating effectively as an unoptimized performance anti-pattern.
+**Action:** When deriving multiple properties from a lookup or type conversion, cache the result once (e.g., `const parsedId = parseInt(id); const match = array.find(...)`) before object construction to eliminate redundant array traversals and redundant type conversions.
