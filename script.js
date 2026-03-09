@@ -349,15 +349,19 @@ const firebaseConfig = {
           patientPhone = `+${patientPhone.replace(/^0/, '')}`;
       }
   
+      // ⚡ Bolt Performance Optimization: Cache parseInt result and avoid redundant array traversals
+      const appointmentId = parseInt(id);
+      const existingAppointment = appointments.find(a => a.id === appointmentId);
+
       const updatedAppointment = {
-          id: parseInt(id),
+          id: appointmentId,
           patientName,
           patientPhone,
           patientAddress,
           appointmentTime,
           status: 'confirmed',
-          paymentStatus: appointments.find(a => a.id === parseInt(id)).paymentStatus,
-          paymentAmount: appointments.find(a => a.id === parseInt(id)).paymentAmount
+          paymentStatus: existingAppointment ? existingAppointment.paymentStatus : 'pending',
+          paymentAmount: existingAppointment ? existingAppointment.paymentAmount : 0
       };
   
       try {
@@ -373,7 +377,7 @@ const firebaseConfig = {
                   name: patientName,
                   phone: patientPhone,
                   address: patientAddress || '',
-                  appointmentIds: [parseInt(id)]
+                  appointmentIds: [appointmentId]
               });
           }
   
