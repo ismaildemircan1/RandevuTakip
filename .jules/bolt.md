@@ -1,0 +1,3 @@
+## 2024-05-18 - Batching DOM Manipulations with DocumentFragment
+**Learning:** Rendering lists of appointments or patients row-by-row directly into the DOM using `list.appendChild` triggers expensive browser reflows/repaints for every single item. This is particularly noticeable in this codebase because lists can grow significantly.
+**Action:** Always batch multiple DOM appends inside loops by appending individual elements to a `DocumentFragment` first. Append the entire fragment to the DOM only once outside the loop to dramatically minimize browser reflows.
