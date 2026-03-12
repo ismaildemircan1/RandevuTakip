@@ -1,0 +1,3 @@
+## 2024-05-24 - Optimize DOM rendering and array traversals
+**Learning:** Adding multiple elements to the DOM inside loops using `.appendChild()` causes expensive browser reflows, particularly for list structures like appointments and patients. Traversing arrays using `array.find()` multiple times with parsed integers is redundant and inefficient.
+**Action:** Use `DocumentFragment` to batch DOM appends within loops and execute a single `.appendChild()` call to the live DOM. Parse properties (e.g., `parseInt(id)`) and perform `array.find()` lookups once, storing the result in variables for reuse.
