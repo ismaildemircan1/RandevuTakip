@@ -3,119 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Randevu Takip Sistemi</title>
+    <title>RandevuTakip | Güvenli sağlık randevu planlama platformu</title>
+    <meta name="description" content="Doktor ve klinik randevularını güvenli şekilde planlayın, yaklaşan ziyaretlerinizi yönetin ve isterseniz güvenilir kişiyle minimum bilgi paylaşın.">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto mt-10 max-w-2xl">
-        <h2 class="text-2xl font-bold text-center mb-6">Randevu Takip Sistemi</h2>
-        <!-- Kullanıcı Giriş/Kayıt Formu -->
-        <div id="authSection" class="bg-white p-6 rounded shadow-md mb-6">
-            <h3 class="text-lg font-semibold mb-4" id="authTitle">Giriş Yap</h3>
-            <div id="userInfo" class="hidden mb-4"></div>
-            <!-- Giriş Formu -->
-            <form id="loginForm" class="mb-4">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded" placeholder="E-posta" required>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="password" class="w-full p-2 border rounded" placeholder="Şifre" required>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Giriş Yap</button>
-            </form>
-            <!-- Kayıt Formu -->
-            <form id="registerForm" class="mb-4 hidden">
-                <div class="mb-4">
-                    <label for="registerEmail" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="registerEmail" class="w-full p-2 border rounded" placeholder="E-posta" required>
-                </div>
-                <div class="mb-4">
-                    <label for="registerPassword" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="registerPassword" class="w-full p-2 border rounded" placeholder="Şifre (min 6 karakter)" required>
-                </div>
-                <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Kayıt Ol</button>
-            </form>
-            <p class="text-center">
-                <a href="#" id="toggleAuth" class="text-blue-500 hover:underline">Kayıt Ol</a>
-            </p>
-            <button id="logoutButton" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 hidden">Çıkış Yap</button>
-        </div>
-        <!-- İçerik (Giriş yapılmadan gizli) -->
-        <div id="contentSection" class="hidden">
-            <!-- Randevu Oluşturma Formu -->
-            <form id="appointmentForm" class="bg-white p-6 rounded shadow-md mb-6">
-                <div class="mb-4">
-                    <label for="patientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="patientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
-                </div>
-                <div class="mb-4">
-                    <label for="patientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="patientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
-                </div>
-                <div class="mb-4">
-                    <label for="patientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="patientAddress" class="w-full p-2 border rounded" placeholder="Adres">
-                </div>
-                <div class="mb-4">
-                    <label for="appointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
-                    <input type="datetime-local" id="appointmentTime" class="w-full p-2 border rounded" required>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Randevu Oluştur</button>
-            </form>
-            <!-- Randevu Düzenleme Formu -->
-            <form id="editAppointmentForm" class="bg-white p-6 rounded shadow-md mb-6 hidden">
-                <h3 class="text-lg font-semibold mb-4">Randevu Düzenle</h3>
-                <input type="hidden" id="editAppointmentId">
-                <div class="mb-4">
-                    <label for="editPatientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="editPatientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
-                </div>
-                <div class="mb-4">
-                    <label for="editPatientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="editPatientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
-                </div>
-                <div class="mb-4">
-                    <label for="editPatientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="editPatientAddress" class="w-full p-2 border rounded" placeholder="Adres">
-                </div>
-                <div class="mb-4">
-                    <label for="editAppointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
-                    <input type="datetime-local" id="editAppointmentTime" class="w-full p-2 border rounded" required>
-                </div>
-                <div class="flex justify-between">
-                    <button type="submit" class="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Kaydet</button>
-                    <button type="button" id="cancelEdit" class="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">İptal</button>
-                </div>
-            </form>
-            <!-- Ödeme Formu -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Ödeme Onayı</h3>
-                <form id="paymentForm" class="mt-2">
-                    <input type="text" id="cardNumber" class="w-full p-2 border rounded mb-2" placeholder="Kart Numarası (Demo)" required>
-                    <input type="number" id="paymentAmount" class="w-full p-2 border rounded mb-2" placeholder="Ödeme Tutarı (TL)" required>
-                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Yap</button>
-                </form>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <div class="shell-container topbar-inner">
+                <a href="#hero" class="brand">
+                    <span class="brand-mark">RT</span>
+                    <span>
+                        <strong>RandevuTakip</strong>
+                        <small>Sağlık planlama ve güvenli koordinasyon</small>
+                    </span>
+                </a>
+                <nav class="top-nav" aria-label="Ana navigasyon">
+                    <a href="#discover">Keşif</a>
+                    <a href="#trust">Mahremiyet</a>
+                    <a href="#dashboard">Panel</a>
+                    <a href="#authSection">Giriş</a>
+                </nav>
             </div>
-            <!-- Hasta Arama -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Hasta Arama</h3>
-                <input type="text" id="patientSearch" class="w-full p-2 border rounded mb-2" placeholder="Hasta adına göre ara">
-            </div>
-            <!-- Hasta Listesi -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Hasta Kayıtları</h3>
-                <div id="patientList" class="patient-list"></div>
-            </div>
-            <!-- Randevu Listesi -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Randevular</h3>
-                <div id="appointmentList" class="appointment-list"></div>
-            </div>
-        </div>
+        </header>
+
+        <main>
+            <section id="hero" class="hero-section">
+                <div class="shell-container hero-grid">
+                    <div class="hero-copy card-surface">
+                        <span class="eyebrow">Türkiye odaklı sağlık randevu deneyimi</span>
+                        <h1>Yakınınızdaki doğru doktoru bulun, randevunuzu planlayın, kontrolü elinizde tutun.</h1>
+                        <p>
+                            RandevuTakip; doktor ve klinik keşfi, planlama, yaklaşan randevu yönetimi ve seçili güvenilir kişiyle
+                            minimum veri paylaşımını tek responsive web deneyiminde birleştirir.
+                        </p>
+                        <div class="hero-actions">
+                            <a class="primary-btn" href="#authSection">Hemen başla</a>
+                            <a class="secondary-btn" href="#dashboard">Paneli incele</a>
+                        </div>
+                        <ul class="trust-points" aria-label="Güven ilkeleri">
+                            <li>Tıbbi tavsiye vermez.</li>
+                            <li>Partner modu varsayılan kapalıdır.</li>
+                            <li>Hassas bilgiler minimum seviyede tutulur.</li>
+                        </ul>
+                    </div>
+
+                    <div id="discover" class="discovery-panel card-surface">
+                        <div class="section-heading compact">
+                            <span class="section-kicker">Hızlı keşif</span>
+                            <h2>Doktor ve klinik aramayı sadeleştirin</h2>
+                        </div>
+                        <div class="search-mockup">
+                            <label for="heroSpecialty" class="sr-only">Branş seçin</label>
+                            <select id="heroSpecialty" class="hero-input">
+                                <option>Kardiyoloji</option>
+                                <option>Dermatoloji</option>
+                                <option>Çocuk Sağlığı</option>
+                                <option>Psikiyatri</option>
+                                <option>Diş Hekimliği</option>
+                            </select>
+                            <label for="heroLocation" class="sr-only">Konum seçin</label>
+                            <input id="heroLocation" class="hero-input" type="text" placeholder="İstanbul, Kadıköy">
+                            <button type="button" class="primary-btn w-full">Yakındaki sonuçları gör</button>
+                        </div>
+                        <div class="hero-metrics">
+                            <article>
+                                <strong>Konum bazlı</strong>
+                                <p>Şehir, ilçe ve manuel adres akışı.</p>
+                            </article>
+                            <article>
+                                <strong>Randevu yönetimi</strong>
+                                <p>Yaklaşan ziyaret, iptal ve yeniden planlama.</p>
+                            </article>
+                            <article>
+                                <strong>Güvenli paylaşım</strong>
+                                <p>Randevu bazlı, minimum veriyle partner bilgilendirme.</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="feature-strip shell-container" aria-label="Ürün avantajları">
+                <article class="feature-card">
+                    <span class="feature-icon">📍</span>
+                    <div>
+                        <h3>Konum odaklı keşif</h3>
+                        <p>Yakındaki doktor, klinik ve ziyaret noktasını hızlıca değerlendirin.</p>
+                    </div>
+                </article>
+                <article class="feature-card">
+                    <span class="feature-icon">🗓️</span>
+                    <div>
+                        <h3>Müsaitlik görünümü</h3>
+                        <p>Yaklaşan randevu planını tek panelden yönetin.</p>
+                    </div>
+                </article>
+                <article class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <div>
+                        <h3>Mahremiyet kontrolü</h3>
+                        <p>Paylaşım kapsamı ve bildirimler tamamen kullanıcı kontrolünde.</p>
+                    </div>
+                </article>
+            </section>
+
+            <section id="trust" class="trust-section">
+                <div class="shell-container trust-grid">
+                    <div class="section-heading">
+                        <span class="section-kicker">Mahremiyet odaklı ürün yaklaşımı</span>
+                        <h2>Platform, keşif ve koordinasyon sunar; tanı veya tedavi önermez.</h2>
+                        <p>
+                            Sağlık verileri hassas kabul edilir. Paylaşımlar açık kullanıcı izniyle, randevu bazlı ve minimum bilgiyle yapılır.
+                            Partner akışı varsayılan kapalıdır ve sürekli canlı konum paylaşımı zorunlu değildir.
+                        </p>
+                    </div>
+                    <div class="trust-cards">
+                        <article class="card-surface compact-card">
+                            <h3>Veri minimizasyonu</h3>
+                            <p>Yalnızca planlama ve koordinasyon için gerekli alanlar tutulur.</p>
+                        </article>
+                        <article class="card-surface compact-card">
+                            <h3>Açık kullanıcı onayı</h3>
+                            <p>Her paylaşım ve partner ilişkisi ayrı onay adımıyla ilerler.</p>
+                        </article>
+                        <article class="card-surface compact-card">
+                            <h3>Randevuya özel paylaşım</h3>
+                            <p>Güvenilir kişiler yalnızca yetki verdiğiniz ziyaret bilgilerini görebilir.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="authSection" class="shell-container auth-dashboard-grid">
+                <aside class="auth-card card-surface">
+                    <div class="section-heading compact">
+                        <span class="section-kicker">Hesap erişimi</span>
+                        <h2 id="authTitle">Giriş Yap</h2>
+                        <p>Paneli kullanmak için hesabınıza giriş yapın veya demo kayıt oluşturun.</p>
+                    </div>
+
+                    <div id="systemMessage" class="system-message" role="status" aria-live="polite">
+                        Tıbbi tavsiye sunulmaz. Platform yalnızca keşif, planlama ve koordinasyon amaçlıdır.
+                    </div>
+
+                    <div id="userInfo" class="user-summary hidden"></div>
+
+                    <form id="loginForm" class="stack-form">
+                        <label class="field-label" for="email">E-posta</label>
+                        <input type="email" id="email" class="field-input" placeholder="ornek@eposta.com" required>
+
+                        <label class="field-label" for="password">Şifre</label>
+                        <input type="password" id="password" class="field-input" placeholder="Şifrenizi girin" required>
+
+                        <button type="submit" class="primary-btn w-full">Giriş Yap</button>
+                    </form>
+
+                    <form id="registerForm" class="stack-form hidden">
+                        <label class="field-label" for="registerEmail">E-posta</label>
+                        <input type="email" id="registerEmail" class="field-input" placeholder="kayit@eposta.com" required>
+
+                        <label class="field-label" for="registerPassword">Şifre</label>
+                        <input type="password" id="registerPassword" class="field-input" placeholder="En az 6 karakter" required>
+
+                        <button type="submit" class="secondary-success-btn w-full">Kayıt Ol</button>
+                    </form>
+
+                    <div class="auth-actions">
+                        <button id="toggleAuth" class="text-link" type="button">Kayıt Ol</button>
+                        <button id="logoutButton" class="danger-btn hidden" type="button">Çıkış Yap</button>
+                    </div>
+                </aside>
+
+                <section id="dashboard" class="dashboard-preview card-surface">
+                    <div class="section-heading compact">
+                        <span class="section-kicker">Panel görünümü</span>
+                        <h2>Randevu operasyonları için daha profesyonel deneyim</h2>
+                    </div>
+                    <div class="dashboard-highlight-grid">
+                        <article class="metric-preview">
+                            <strong>Yaklaşan randevu</strong>
+                            <p>Bir sonraki ziyaretinizi öne çıkarır, hızlı aksiyon sunar.</p>
+                        </article>
+                        <article class="metric-preview">
+                            <strong>Güvenilir kişi yönetimi</strong>
+                            <p>Randevu bazlı paylaşım öncesi güvenilir kişileri hazır tutar.</p>
+                        </article>
+                        <article class="metric-preview">
+                            <strong>Bildirim ve ödeme takibi</strong>
+                            <p>Ödeme, hatırlatma ve güvenlik durumlarını tek ekranda toplar.</p>
+                        </article>
+                    </div>
+                </section>
+            </section>
+
+            <section id="contentSection" class="hidden shell-container app-content">
+                <section class="dashboard-section">
+                    <div class="section-heading compact">
+                        <span class="section-kicker">Operasyon paneli</span>
+                        <h2>Randevu, hasta ve güvenilir kişi yönetimi</h2>
+                    </div>
+                    <div class="stats-grid" aria-label="Özet kartları">
+                        <article class="stat-card card-surface">
+                            <span>Toplam randevu</span>
+                            <strong id="metricAppointments">0</strong>
+                            <small>Hesabınızdaki tüm kayıtlar</small>
+                        </article>
+                        <article class="stat-card card-surface">
+                            <span>Yaklaşan ziyaret</span>
+                            <strong id="metricUpcoming">0</strong>
+                            <small>Önümüzdeki 7 gün</small>
+                        </article>
+                        <article class="stat-card card-surface">
+                            <span>İptal edilen</span>
+                            <strong id="metricCancelled">0</strong>
+                            <small>Durum takibi için</small>
+                        </article>
+                        <article class="stat-card card-surface">
+                            <span>Ödenen</span>
+                            <strong id="metricPaid">0</strong>
+                            <small>Demo ödeme akışı</small>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="content-grid">
+                    <div class="left-column stack-gap">
+                        <form id="appointmentForm" class="card-surface stack-form">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Yeni randevu</span>
+                                <h3>Doktor / klinik planlaması oluşturun</h3>
+                            </div>
+                            <div class="form-grid">
+                                <div>
+                                    <label class="field-label" for="patientName">Hasta adı</label>
+                                    <input type="text" id="patientName" class="field-input" placeholder="Hasta adı" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="patientPhone">Telefon numarası</label>
+                                    <input type="tel" id="patientPhone" class="field-input" placeholder="+905xxxxxxxxx" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="doctorName">Doktor adı</label>
+                                    <input type="text" id="doctorName" class="field-input" placeholder="Uzm. Dr. Ayşe Yılmaz" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="clinicName">Klinik / kurum</label>
+                                    <input type="text" id="clinicName" class="field-input" placeholder="Kadıköy Sağlık Merkezi" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="specialty">Branş</label>
+                                    <select id="specialty" class="field-input" required>
+                                        <option value="">Branş seçin</option>
+                                        <option>Kardiyoloji</option>
+                                        <option>Dermatoloji</option>
+                                        <option>Çocuk Sağlığı</option>
+                                        <option>Psikiyatri</option>
+                                        <option>Diş Hekimliği</option>
+                                        <option>Kadın Hastalıkları</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="visitType">Ziyaret tipi</label>
+                                    <select id="visitType" class="field-input" required>
+                                        <option>İlk muayene</option>
+                                        <option>Kontrol randevusu</option>
+                                        <option>Tetkik sonucu</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label class="field-label" for="patientAddress">Adres / klinik notu</label>
+                            <input type="text" id="patientAddress" class="field-input" placeholder="Adres veya ulaşım notu (opsiyonel)">
+
+                            <div class="form-grid">
+                                <div>
+                                    <label class="field-label" for="appointmentTime">Randevu zamanı</label>
+                                    <input type="datetime-local" id="appointmentTime" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="trustedContactSelect">Paylaşılacak güvenilir kişi</label>
+                                    <select id="trustedContactSelect" class="field-input">
+                                        <option value="">Paylaşım yok</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label class="checkbox-row" for="shareWithCompanion">
+                                <input type="checkbox" id="shareWithCompanion">
+                                <span>Randevu özetini seçili güvenilir kişiyle paylaş.</span>
+                            </label>
+
+                            <button type="submit" class="primary-btn w-full">Randevu Oluştur</button>
+                        </form>
+
+                        <form id="editAppointmentForm" class="card-surface stack-form hidden">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Düzenleme</span>
+                                <h3>Randevu bilgilerini güncelleyin</h3>
+                            </div>
+                            <input type="hidden" id="editAppointmentId">
+                            <div class="form-grid">
+                                <div>
+                                    <label class="field-label" for="editPatientName">Hasta adı</label>
+                                    <input type="text" id="editPatientName" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="editPatientPhone">Telefon numarası</label>
+                                    <input type="tel" id="editPatientPhone" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="editDoctorName">Doktor adı</label>
+                                    <input type="text" id="editDoctorName" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="editClinicName">Klinik / kurum</label>
+                                    <input type="text" id="editClinicName" class="field-input" required>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="editSpecialty">Branş</label>
+                                    <select id="editSpecialty" class="field-input" required>
+                                        <option>Kardiyoloji</option>
+                                        <option>Dermatoloji</option>
+                                        <option>Çocuk Sağlığı</option>
+                                        <option>Psikiyatri</option>
+                                        <option>Diş Hekimliği</option>
+                                        <option>Kadın Hastalıkları</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="field-label" for="editVisitType">Ziyaret tipi</label>
+                                    <select id="editVisitType" class="field-input" required>
+                                        <option>İlk muayene</option>
+                                        <option>Kontrol randevusu</option>
+                                        <option>Tetkik sonucu</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <label class="field-label" for="editPatientAddress">Adres / klinik notu</label>
+                            <input type="text" id="editPatientAddress" class="field-input">
+                            <label class="field-label" for="editAppointmentTime">Randevu zamanı</label>
+                            <input type="datetime-local" id="editAppointmentTime" class="field-input" required>
+                            <div class="inline-actions">
+                                <button type="submit" class="secondary-warning-btn">Kaydet</button>
+                                <button type="button" id="cancelEdit" class="ghost-btn">İptal</button>
+                            </div>
+                        </form>
+
+                        <section class="card-surface stack-form">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Ödeme</span>
+                                <h3>Demo ödeme onayı</h3>
+                            </div>
+                            <form id="paymentForm" class="stack-form">
+                                <label class="field-label" for="paymentAppointmentId">Randevu seçin</label>
+                                <select id="paymentAppointmentId" class="field-input">
+                                    <option value="">Ödeme bekleyen randevu seçin</option>
+                                </select>
+                                <label class="field-label" for="cardNumber">Kart numarası</label>
+                                <input type="text" id="cardNumber" class="field-input" placeholder="1111 2222 3333 4444" required>
+                                <label class="field-label" for="paymentAmount">Ödeme tutarı (TL)</label>
+                                <input type="number" id="paymentAmount" class="field-input" placeholder="750" min="1" required>
+                                <button type="submit" class="secondary-success-btn w-full">Ödeme Yap</button>
+                            </form>
+                        </section>
+                    </div>
+
+                    <div class="right-column stack-gap">
+                        <section class="card-surface stack-form">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Yaklaşan randevu</span>
+                                <h3>Bugün ve yakın dönem özeti</h3>
+                            </div>
+                            <div id="upcomingAppointmentCard" class="empty-state">
+                                Henüz yaklaşan randevu bulunmuyor.
+                            </div>
+                        </section>
+
+                        <section class="card-surface stack-form">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Güvenilir kişi yönetimi</span>
+                                <h3>Partner modu için temel kişi ekleyin</h3>
+                            </div>
+                            <form id="trustedContactForm" class="stack-form">
+                                <div class="form-grid">
+                                    <div>
+                                        <label class="field-label" for="trustedContactName">Ad soyad</label>
+                                        <input type="text" id="trustedContactName" class="field-input" placeholder="Örn. Elif Demir" required>
+                                    </div>
+                                    <div>
+                                        <label class="field-label" for="trustedContactRelation">İlişki</label>
+                                        <select id="trustedContactRelation" class="field-input" required>
+                                            <option>Aile üyesi</option>
+                                            <option>Eş / partner</option>
+                                            <option>Yakın arkadaş</option>
+                                            <option>Bakım veren</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <label class="field-label" for="trustedContactPhone">Telefon</label>
+                                <input type="tel" id="trustedContactPhone" class="field-input" placeholder="+905xxxxxxxxx" required>
+                                <button type="submit" class="primary-btn w-full">Güvenilir Kişi Ekle</button>
+                            </form>
+                            <div id="trustedContactsList" class="stack-gap"></div>
+                        </section>
+
+                        <section class="card-surface stack-form">
+                            <div class="section-heading compact">
+                                <span class="section-kicker">Hasta görünümü</span>
+                                <h3>Kayıtlar ve hızlı arama</h3>
+                            </div>
+                            <label class="field-label" for="patientSearch">Hasta adına göre ara</label>
+                            <input type="text" id="patientSearch" class="field-input" placeholder="Hasta adına göre ara">
+                            <div id="patientInsight" class="empty-state">Bir hasta seçildiğinde detaylar burada görüntülenir.</div>
+                            <div id="patientList" class="stack-gap"></div>
+                        </section>
+                    </div>
+                </section>
+
+                <section class="card-surface appointments-board">
+                    <div class="section-heading compact board-header">
+                        <div>
+                            <span class="section-kicker">Randevu listesi</span>
+                            <h3>Tüm randevular</h3>
+                        </div>
+                        <p>İptal, düzenleme ve check-in güncellemelerini kart üzerinden yönetin.</p>
+                    </div>
+                    <div id="appointmentList" class="appointment-grid"></div>
+                </section>
+            </section>
+        </main>
     </div>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
