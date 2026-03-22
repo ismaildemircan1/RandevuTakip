@@ -1,40 +1,635 @@
-.appointment-item {
-    background-color: white;
-    border-radius: 8px;
+:root {
+    --bg: #f4f7fb;
+    --surface: rgba(255, 255, 255, 0.92);
+    --surface-strong: #ffffff;
+    --border: rgba(148, 163, 184, 0.24);
+    --text: #10233d;
+    --muted: #5a6b86;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --success: #0f9f6e;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+    --radius: 22px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 24%),
+        var(--bg);
+    color: var(--text);
+}
+
+main {
+    padding-bottom: 4rem;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.shell-container {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto;
+}
+
+.card-surface {
+    background: var(--surface);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 1rem 0;
+    backdrop-filter: blur(18px);
+    background: rgba(244, 247, 251, 0.78);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.topbar-inner,
+.top-nav,
+.brand,
+.auth-actions,
+.inline-actions,
+.board-header {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-inner,
+.board-header {
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.brand {
+    gap: 0.9rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.brand-mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    color: white;
+    font-weight: 700;
+}
+
+.brand small {
+    display: block;
+    color: var(--muted);
+}
+
+.top-nav {
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.top-nav a,
+.text-link {
+    color: var(--muted);
+    text-decoration: none;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.top-nav a:hover,
+.text-link:hover {
+    color: var(--primary);
+}
+
+.hero-section {
+    padding: 2.5rem 0 1.75rem;
+}
+
+.hero-grid,
+.trust-grid,
+.auth-dashboard-grid,
+.content-grid,
+.form-grid,
+.stats-grid,
+.appointment-grid,
+.dashboard-highlight-grid,
+.hero-metrics,
+.trust-cards,
+.feature-strip {
+    display: grid;
+}
+
+.hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
+}
+
+.hero-copy,
+.discovery-panel,
+.auth-card,
+.dashboard-preview,
+.appointments-board {
+    padding: 2rem;
+}
+
+.eyebrow,
+.section-kicker {
+    display: inline-flex;
+    margin-bottom: 1rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-dark);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.hero-copy h1 {
+    font-size: clamp(2.3rem, 5vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+}
+
+.hero-copy p,
+.section-heading p,
+.metric-preview p,
+.feature-card p,
+.compact-card p,
+.appointment-meta,
+.patient-item p,
+.system-message,
+.user-summary,
+.empty-state,
+.trusted-contact-card p {
+    color: var(--muted);
+}
+
+.hero-actions,
+.trust-points,
+.stack-form,
+.stack-gap {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-actions {
+    flex-direction: row;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.trust-points {
+    list-style: none;
+    gap: 0.7rem;
+    padding: 0;
+    margin: 0;
+}
+
+.trust-points li::before {
+    content: "•";
+    color: var(--primary);
+    font-weight: 700;
+    margin-right: 0.6rem;
+}
+
+.search-mockup,
+.stack-form,
+.stack-gap {
+    gap: 0.95rem;
+}
+
+.hero-input,
+.field-input {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.36);
+    background: white;
+    color: var(--text);
+    padding: 0.9rem 1rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-input:focus,
+.field-input:focus {
+    border-color: rgba(37, 99, 235, 0.7);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.hero-metrics,
+.dashboard-highlight-grid,
+.trust-cards,
+.stats-grid,
+.appointment-grid,
+.feature-strip {
+    gap: 1rem;
+}
+
+.hero-metrics {
+    margin-top: 1.25rem;
+}
+
+.hero-metrics article,
+.metric-preview,
+.feature-card,
+.compact-card,
+.stat-card,
+.appointment-item,
+.patient-item,
+.trusted-contact-card,
+.upcoming-card {
+    background: var(--surface-strong);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+}
+
+.hero-metrics article,
+.metric-preview,
+.compact-card,
+.stat-card,
+.upcoming-card {
+    padding: 1rem 1.1rem;
+}
+
+.feature-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 2rem;
+}
+
+.feature-card {
+    padding: 1rem 1.15rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.feature-icon {
+    font-size: 1.45rem;
+}
+
+.trust-section {
+    padding: 1rem 0 2rem;
+}
+
+.trust-grid,
+.auth-dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.section-heading.compact h2,
+.section-heading.compact h3 {
+    margin-bottom: 0.35rem;
+}
+
+.system-message {
+    border-radius: 16px;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    background: rgba(37, 99, 235, 0.08);
+    padding: 0.95rem 1rem;
+}
+
+.user-summary {
     padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    background: rgba(15, 159, 110, 0.08);
+    border: 1px solid rgba(15, 159, 110, 0.18);
 }
 
-.patient-item {
-    background-color: white;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.auth-actions {
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-#authSection {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.dashboard-section {
+    margin-top: 2rem;
 }
 
-#editAppointmentForm {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.app-content {
+    margin-top: 2rem;
 }
 
-.appointment-item button, .patient-item button, #authSection button {
-    margin-right: 0.5rem;
+.stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-#authSection form {
-    margin-bottom: 1rem;
+.stat-card {
+    min-height: 9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-#toggleAuth {
+.stat-card strong {
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+.content-grid {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.95rem;
+}
+
+.field-label {
     display: inline-block;
-    margin-top: 0.5rem;
+    margin-bottom: 0.45rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.checkbox-row {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    color: var(--muted);
+}
+
+.checkbox-row input {
+    margin-top: 0.2rem;
+}
+
+.appointments-board {
+    margin-top: 1.5rem;
+}
+
+.appointment-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.appointment-item,
+.patient-item,
+.trusted-contact-card,
+.upcoming-card {
+    padding: 1.2rem;
+}
+
+.appointment-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointment-header,
+.appointment-footer,
+.patient-header,
+.trusted-contact-header,
+.badge-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.badge,
+.status-chip,
+.safety-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.badge {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-dark);
+}
+
+.status-chip.confirmed {
+    background: rgba(15, 159, 110, 0.12);
+    color: #047857;
+}
+
+.status-chip.cancelled {
+    background: rgba(220, 38, 38, 0.12);
+    color: #b91c1c;
+}
+
+.status-chip.pending {
+    background: rgba(217, 119, 6, 0.12);
+    color: #b45309;
+}
+
+.safety-chip {
+    background: rgba(14, 165, 233, 0.12);
+    color: #0369a1;
+}
+
+.primary-btn,
+.secondary-btn,
+.secondary-success-btn,
+.secondary-warning-btn,
+.ghost-btn,
+.danger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-radius: 14px;
+    border: none;
+    padding: 0.85rem 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover,
+.secondary-success-btn:hover,
+.secondary-warning-btn:hover,
+.ghost-btn:hover,
+.danger-btn:hover {
+    transform: translateY(-1px);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.22);
+}
+
+.secondary-btn,
+.ghost-btn {
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--primary-dark);
+}
+
+.secondary-success-btn {
+    background: rgba(15, 159, 110, 0.12);
+    color: #047857;
+}
+
+.secondary-warning-btn {
+    background: rgba(217, 119, 6, 0.14);
+    color: #b45309;
+}
+
+.danger-btn {
+    background: rgba(220, 38, 38, 0.12);
+    color: #b91c1c;
+}
+
+.inline-actions {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.empty-state {
+    border: 1px dashed rgba(148, 163, 184, 0.45);
+    border-radius: 18px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.68);
+}
+
+.toast-container {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.toast {
+    min-width: min(360px, calc(100vw - 2rem));
+    border-radius: 18px;
+    color: white;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #0f9f6e, #047857);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.toast.info {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.w-full {
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .hero-grid,
+    .trust-grid,
+    .auth-dashboard-grid,
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-strip,
+    .stats-grid,
+    .appointment-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    .topbar {
+        position: static;
+    }
+
+    .topbar-inner,
+    .top-nav,
+    .hero-actions,
+    .board-header,
+    .auth-actions,
+    .inline-actions,
+    .appointment-header,
+    .appointment-footer,
+    .patient-header,
+    .trusted-contact-header,
+    .badge-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .feature-strip,
+    .stats-grid,
+    .appointment-grid,
+    .form-grid,
+    .hero-metrics,
+    .dashboard-highlight-grid,
+    .trust-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-copy,
+    .discovery-panel,
+    .auth-card,
+    .dashboard-preview,
+    .appointments-board {
+        padding: 1.35rem;
+    }
+
+    .shell-container {
+        width: min(100% - 1rem, 1180px);
+    }
 }
