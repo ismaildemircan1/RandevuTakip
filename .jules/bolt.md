@@ -1,0 +1,3 @@
+## 2025-03-25 - DOM Batching and Constant Hoisting in Vanilla JS
+**Learning:** Found significant layout thrashing risks in `renderAppointments`, `renderPatients`, and `patientSearch` where elements were being iteratively appended to the DOM inside loops, causing redundant reflows for each item rendered. Constant calculations were also unnecessarily inside loops.
+**Action:** Use `DocumentFragment` as a standard practice for all list renderings in vanilla JS components to batch DOM appends before attaching to the actual document. Invariant calculations should always be hosted outside iterative loops.
