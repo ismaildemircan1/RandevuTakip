@@ -194,6 +194,8 @@ const firebaseConfig = {
               appointments.push(doc.data());
           });
   
+          // Bolt: Use DocumentFragment to batch DOM appends and minimize reflows
+          const fragment = document.createDocumentFragment();
           appointments.forEach(apt => {
               const div = document.createElement('div');
               div.className = 'appointment-item';
@@ -208,8 +210,9 @@ const firebaseConfig = {
                   <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 mr-2" onclick="cancelAppointment(${apt.id})">İptal Et</button>
                   <button class="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800" onclick="deleteAppointment(${apt.id})">Sil</button>
               `;
-              list.appendChild(div);
+              fragment.appendChild(div);
           });
+          list.appendChild(fragment);
   
           checkReminders();
       } catch (error) {
@@ -228,6 +231,8 @@ const firebaseConfig = {
               patients.push(doc.data());
           });
   
+          // Bolt: Use DocumentFragment to batch DOM appends and minimize reflows
+          const fragment = document.createDocumentFragment();
           patients.forEach(patient => {
               const div = document.createElement('div');
               div.className = 'patient-item';
@@ -238,8 +243,9 @@ const firebaseConfig = {
                   <p><strong>Randevular:</strong> ${patient.appointmentIds.length} adet</p>
                   <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewPatientDetails('${patient.phone}')">Detayları Gör</button>
               `;
-              list.appendChild(div);
+              fragment.appendChild(div);
           });
+          list.appendChild(fragment);
       } catch (error) {
           alert('Hata: ' + error.message);
       }
@@ -292,6 +298,8 @@ const firebaseConfig = {
               }
           });
   
+          // Bolt: Use DocumentFragment to batch DOM appends and minimize reflows
+          const fragment = document.createDocumentFragment();
           patients.forEach(patient => {
               const div = document.createElement('div');
               div.className = 'patient-item';
@@ -302,8 +310,9 @@ const firebaseConfig = {
                   <p><strong>Randevular:</strong> ${patient.appointmentIds.length} adet</p>
                   <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewPatientDetails('${patient.phone}')">Detayları Gör</button>
               `;
-              list.appendChild(div);
+              fragment.appendChild(div);
           });
+          list.appendChild(fragment);
       } catch (error) {
           alert('Hata: ' + error.message);
       }
@@ -433,11 +442,12 @@ const firebaseConfig = {
       try {
           const snapshot = await db.collection('appointments').where('status', '==', 'confirmed').get();
           const now = new Date();
+          // Bolt: Hoist constant calculation outside the loop
+          const oneDay = 24 * 60 * 60 * 1000;
           snapshot.forEach(doc => {
               const apt = doc.data();
               const aptTime = new Date(apt.appointmentTime);
               const timeDiff = aptTime - now;
-              const oneDay = 24 * 60 * 60 * 1000;
   
               if (timeDiff > 0 && timeDiff <= oneDay) {
                   sendWhatsAppMessage(apt.patientPhone, `Merhaba ${apt.patientName}, hatırlatma: Randevunuz ${apt.appointmentTime} tarihinde.`);
