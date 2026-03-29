@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid Redundant Firestore Queries by Using Global State
+**Learning:** In vanilla JS apps with global state (e.g., `appointments` and `patients` arrays in `script.js`), it's inefficient to perform redundant Firestore queries (like `.where('status', '==', 'confirmed').get()`) for operations like reminders when all the necessary data is already downloaded and cached in memory.
+**Action:** When adding or modifying operations that iterate over all data, check if the data exists in global memory (like `appointments`) first. Use a loop over the cached data instead of making a new database query to improve performance and reduce database reads.

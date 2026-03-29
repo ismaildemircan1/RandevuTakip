@@ -431,18 +431,22 @@ const firebaseConfig = {
   
   async function checkReminders() {
       try {
-          const snapshot = await db.collection('appointments').where('status', '==', 'confirmed').get();
+          // Optimization: Use globally cached appointments array instead of redundant Firestore query
+          // and move invariant constant calculation outside the loop.
           const now = new Date();
-          snapshot.forEach(doc => {
-              const apt = doc.data();
-              const aptTime = new Date(apt.appointmentTime);
-              const timeDiff = aptTime - now;
-              const oneDay = 24 * 60 * 60 * 1000;
+          const oneDay = 24 * 60 * 60 * 1000;
+
+          for (let i = 0; i < appointments.length; i++) {
+              const apt = appointments[i];
+              if (apt.status === 'confirmed') {
+                  const aptTime = new Date(apt.appointmentTime);
+                  const timeDiff = aptTime - now;
   
-              if (timeDiff > 0 && timeDiff <= oneDay) {
-                  sendWhatsAppMessage(apt.patientPhone, `Merhaba ${apt.patientName}, hatırlatma: Randevunuz ${apt.appointmentTime} tarihinde.`);
+                  if (timeDiff > 0 && timeDiff <= oneDay) {
+                      sendWhatsAppMessage(apt.patientPhone, `Merhaba ${apt.patientName}, hatırlatma: Randevunuz ${apt.appointmentTime} tarihinde.`);
+                  }
               }
-          });
+          }
       } catch (error) {
           console.error('Hatırlatma hatası:', error);
       }
