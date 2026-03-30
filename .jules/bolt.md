@@ -1,0 +1,4 @@
+
+## 2024-05-28 - Avoid full collection Firestore queries on keystrokes
+**Learning:** Found a severe anti-pattern in `patientSearch` where a full `db.collection('patients').get()` was executing on every keystroke. Additionally, the application correctly maintains a global `patients` state variable populated during `renderPatients`, but wasn't leveraging it for lookups, thereby clearing the global variable and fetching everything again from the db.
+**Action:** When implementing real-time search or filtering, always prioritize using a debounced in-memory filter over the pre-fetched global state (like the `patients` array) instead of executing expensive, redundant database queries on every input change. Combine this with `DocumentFragment` when rendering the filtered results to mitigate rendering bottlenecks.
