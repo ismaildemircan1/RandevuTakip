@@ -1,0 +1,3 @@
+## 2024-04-02 - Eliminate Redundant Firestore Queries by Utilizing Global State
+**Learning:** The application populates global state arrays (`appointments`, `patients`) upon initial load but occasionally ignores this local state to perform redundant remote queries against Firestore. For example, `checkReminders` queried Firestore for confirmed appointments even though they are available locally. In environments with slow networks or high query loads, this creates an unnecessary bottleneck.
+**Action:** When implementing operations that require iterating over entities (like generating reminders or filtering), check if the data is already populated in a global state array (e.g., `appointments` or `patients`) instead of issuing a new database query.
