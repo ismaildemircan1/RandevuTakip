@@ -277,22 +277,18 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  document.getElementById('patientSearch').addEventListener('input', function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
-      patients = [];
   
       try {
-          const snapshot = await db.collection('patients').get();
-          snapshot.forEach(doc => {
-              const patient = doc.data();
-              if (patient.name.toLowerCase().includes(searchTerm)) {
-                  patients.push(patient);
-              }
-          });
+          // ⚡ Bolt: Use in-memory filtering instead of Firestore query to prevent unnecessary network requests and improve search performance
+          const filteredPatients = patients.filter(patient =>
+              patient.name.toLowerCase().includes(searchTerm)
+          );
   
-          patients.forEach(patient => {
+          filteredPatients.forEach(patient => {
               const div = document.createElement('div');
               div.className = 'patient-item';
               div.innerHTML = `
