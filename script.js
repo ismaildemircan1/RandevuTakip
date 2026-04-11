@@ -277,7 +277,21 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Debounce utility function
+  function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+          const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+      };
+  }
+
+  // ⚡ Bolt Optimization: Debounce search input to reduce API calls
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -307,7 +321,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
