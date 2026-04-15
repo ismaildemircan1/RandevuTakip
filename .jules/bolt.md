@@ -1,0 +1,3 @@
+## 2025-01-20 - Debounce search and batched DOM updates
+**Learning:** In vanilla JS projects where rendering involves clearing innerHTML and iterating to rebuild it, un-debounced inputs hooked directly to external dependencies (like Firestore) trigger extreme churn in both API limits and browser rendering queues.
+**Action:** Always combine debouncing for network requests with DocumentFragments for DOM rebuilds when performing localized searches without virtualization.
