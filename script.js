@@ -277,7 +277,17 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Debounce utility function to limit the rate at which a function is executed
+  function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+
+  // ⚡ Bolt: Debounce the search input to reduce Firestore API calls and DOM reflows
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -292,6 +302,8 @@ const firebaseConfig = {
               }
           });
   
+          // ⚡ Bolt: Use DocumentFragment to batch DOM appends and minimize reflows
+          const fragment = document.createDocumentFragment();
           patients.forEach(patient => {
               const div = document.createElement('div');
               div.className = 'patient-item';
@@ -302,12 +314,13 @@ const firebaseConfig = {
                   <p><strong>Randevular:</strong> ${patient.appointmentIds.length} adet</p>
                   <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewPatientDetails('${patient.phone}')">Detayları Gör</button>
               `;
-              list.appendChild(div);
+              fragment.appendChild(div);
           });
+          list.appendChild(fragment);
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
