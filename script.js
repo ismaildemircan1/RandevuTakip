@@ -277,13 +277,30 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Utility function for debouncing
+  function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+          const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+      };
+  }
+
+  // ⚡ Bolt Optimization: Debounce the search input to reduce Firestore reads
+  // Reduces API calls and DB queries significantly when typing quickly
+  const handlePatientSearch = async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
       patients = [];
   
       try {
+          // Note: In a production app, consider querying by name prefix or using an indexing service
+          // like Algolia instead of fetching all and filtering on the client, especially for large datasets.
           const snapshot = await db.collection('patients').get();
           snapshot.forEach(doc => {
               const patient = doc.data();
@@ -307,7 +324,9 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  };
+
+  document.getElementById('patientSearch').addEventListener('input', debounce(handlePatientSearch, 300));
   
   async function cancelAppointment(id) {
       try {
