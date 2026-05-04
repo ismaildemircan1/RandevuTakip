@@ -1,0 +1,3 @@
+## 2024-05-04 - Unnecessary Full Collection Fetches on Keystrokes
+**Learning:** The `patientSearch` input listener triggers a full fetch of the `patients` Firestore collection on every keystroke, which is an O(N) network operation triggered repeatedly without debouncing. Since `db.collection('patients').get()` runs for every character typed, this can quickly exhaust Firestore read quotas and cause UI freezing/lag as the patient list grows.
+**Action:** Always wrap event listeners that trigger network requests or expensive operations in a debounce function (e.g., 300ms timeout) to ensure queries are only executed after the user has stopped typing.
