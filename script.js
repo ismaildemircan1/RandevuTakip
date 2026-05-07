@@ -277,7 +277,18 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Utility: Debounce function to limit the rate at which a function can fire.
+  function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+
+  // Performance optimization: Debounce search input to reduce API calls
+  // Expected impact: Drastically reduces the number of database reads during fast typing.
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -307,7 +318,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
