@@ -11,6 +11,15 @@ const firebaseConfig = {
   const db = firebase.firestore();
   const auth = firebase.auth();
   
+  // ⚡ Bolt: Added debounce utility to limit function execution rate
+  function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+  }
+
   let appointments = [];
   let patients = [];
   
@@ -277,7 +286,8 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // ⚡ Bolt: Wrapped search handler in debounce to prevent full collection fetch on every keystroke
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -307,7 +317,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
