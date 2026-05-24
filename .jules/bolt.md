@@ -1,0 +1,3 @@
+## 2024-05-24 - Firestore Query Bottleneck on Input
+**Learning:** This codebase had an anti-pattern where a full Firestore collection scan (`db.collection('patients').get()`) was executed on every single keystroke in the patient search input. This can cause severe performance issues (blocking the main thread, excessive reads) and high database query costs.
+**Action:** Always verify if high-frequency event listeners (like `input` or `scroll`) trigger expensive network or database requests. Implement debouncing (`setTimeout` / `clearTimeout`) to ensure these expensive operations only happen after the user stops interacting for a short duration (e.g., 300ms).
