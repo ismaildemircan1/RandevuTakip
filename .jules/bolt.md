@@ -1,0 +1,3 @@
+## 2024-05-26 - Missing Debouncing on Inputs Triggers Excessive Database Queries
+**Learning:** Found an `input` event listener hooked directly to a database read query without any debouncing. In this app's architecture (using Firestore), this means every single keystroke triggers a network request and a read operation, rapidly consuming database quotas and unnecessarily blocking the main thread.
+**Action:** Always check input fields that trigger database queries or API requests for debouncing/throttling. Wrap the core logic in a simple `setTimeout` mechanism to batch operations until the user pauses typing.
