@@ -1,0 +1,3 @@
+## 2025-06-05 - Debounce Patient Search Event Listener
+**Learning:** In vanilla JavaScript applications handling user input that triggers database queries (e.g., Firestore `.get()`), unrestricted `'input'` event listeners are a major performance bottleneck, executing on every keystroke.
+**Action:** Always verify if search inputs or text filters are debounced when reviewing event listeners. Implement a simple utility function (`debounce`) to delay execution until the user pauses typing to minimize network requests and database reads.
