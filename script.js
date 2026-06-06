@@ -277,14 +277,17 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
-      const searchTerm = e.target.value.toLowerCase();
-      const list = document.getElementById('patientList');
-      list.innerHTML = '';
-      patients = [];
-  
-      try {
-          const snapshot = await db.collection('patients').get();
+  let searchTimeout;
+  document.getElementById('patientSearch').addEventListener('input', function(e) {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(async () => {
+          const searchTerm = e.target.value.toLowerCase();
+          const list = document.getElementById('patientList');
+          list.innerHTML = '';
+          patients = [];
+
+          try {
+              const snapshot = await db.collection('patients').get();
           snapshot.forEach(doc => {
               const patient = doc.data();
               if (patient.name.toLowerCase().includes(searchTerm)) {
@@ -307,6 +310,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
+      }, 300); // 300ms debounce
   });
   
   async function cancelAppointment(id) {
