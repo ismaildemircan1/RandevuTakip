@@ -11,6 +11,19 @@ const firebaseConfig = {
   const db = firebase.firestore();
   const auth = firebase.auth();
   
+  // ⚡ Bolt: Utility to debounce frequent events
+  function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+          const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+      };
+  }
+
   let appointments = [];
   let patients = [];
   
@@ -277,7 +290,8 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // ⚡ Bolt: Added debounce to prevent excessive database queries on every keystroke
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -307,7 +321,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
