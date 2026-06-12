@@ -1,0 +1,3 @@
+## 2024-06-12 - Expensive Firestore Read on Search
+**Learning:** Found an expensive Firestore read happening on every keystroke in the `patientSearch` input listener. Doing an entire `db.collection('patients').get()` on every keystroke is extremely inefficient.
+**Action:** Always wrap frequent user input event listeners (like search inputs) that trigger expensive operations (like database queries or network requests) with a debounce function to minimize unnecessary executions.
