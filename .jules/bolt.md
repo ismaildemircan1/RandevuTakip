@@ -1,0 +1,3 @@
+## 2024-06-15 - Un-debounced Search Input Causing Full Collection Scans
+**Learning:** In `script.js`, the search functionality on `patientSearch` input triggered a full Firestore collection scan (`db.collection('patients').get()`) on *every single keystroke*. This is an extreme performance anti-pattern that drastically increases database reads, bandwidth usage, and causes frontend lag, especially as the collection grows.
+**Action:** Always debounce search inputs, especially when they trigger network requests or database queries. A simple 300ms debounce significantly reduces the number of queries to a fraction of the un-optimized version without sacrificing user experience.
