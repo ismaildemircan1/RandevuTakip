@@ -1,0 +1,3 @@
+## 2024-11-06 - Replacing DB Query with Local Filtering in Search
+**Learning:** In a heavily used vanilla JS / Firestore application, input event listeners attached to search fields often inadvertently trigger full database queries (`db.collection('...').get()`) on every keystroke if not carefully designed. This is a common pattern in this specific codebase (e.g. `patientSearch`).
+**Action:** When working on similar codebase features, always ensure that real-time search functionality uses the local cache (e.g. `patients` array populated on page load) rather than hitting the DB for every keypress. Alternatively, debounce API calls.
