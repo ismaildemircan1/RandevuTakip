@@ -1,0 +1,3 @@
+## 2024-06-22 - Debouncing Search Inputs to Prevent Excessive API Calls
+**Learning:** The application was making a full database collection fetch (`await db.collection('patients').get()`) on every keystroke inside the search input event listener. This is a significant performance bottleneck that can lead to UI blocking, wasted network bandwidth, and potential rate-limiting from the database provider (Firestore).
+**Action:** Always verify if high-frequency events (like keystrokes on an input) trigger expensive operations like network requests or complex UI re-renders. If they do, wrap the callback in a debounce function (e.g. 300ms delay) to ensure the operation is only executed when the user stops typing.
