@@ -277,13 +277,28 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Utility function to debounce rapid function calls
+  function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+          const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+      };
+  }
+
+  // Use debounce on patient search to avoid excessive API calls
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
       patients = [];
   
       try {
+          // This avoids fetching from the database on every single keystroke
           const snapshot = await db.collection('patients').get();
           snapshot.forEach(doc => {
               const patient = doc.data();
@@ -307,7 +322,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
