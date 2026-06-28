@@ -277,36 +277,44 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  let searchTimeout;
+  document.getElementById('patientSearch').addEventListener('input', function(e) {
       const searchTerm = e.target.value.toLowerCase();
-      const list = document.getElementById('patientList');
-      list.innerHTML = '';
-      patients = [];
+
+      // Clear the previous timeout if it exists
+      clearTimeout(searchTimeout);
+
+      // Set a new timeout to delay the execution (Reduces unnecessary Firestore reads by debouncing)
+      searchTimeout = setTimeout(async () => {
+          const list = document.getElementById('patientList');
+          list.innerHTML = '';
+          patients = [];
   
-      try {
-          const snapshot = await db.collection('patients').get();
-          snapshot.forEach(doc => {
-              const patient = doc.data();
-              if (patient.name.toLowerCase().includes(searchTerm)) {
-                  patients.push(patient);
-              }
-          });
+          try {
+              const snapshot = await db.collection('patients').get();
+              snapshot.forEach(doc => {
+                  const patient = doc.data();
+                  if (patient.name.toLowerCase().includes(searchTerm)) {
+                      patients.push(patient);
+                  }
+              });
   
-          patients.forEach(patient => {
-              const div = document.createElement('div');
-              div.className = 'patient-item';
-              div.innerHTML = `
-                  <p><strong>Ad:</strong> ${patient.name}</p>
-                  <p><strong>Telefon:</strong> ${patient.phone}</p>
-                  <p><strong>Adres:</strong> ${patient.address || 'Belirtilmemiş'}</p>
-                  <p><strong>Randevular:</strong> ${patient.appointmentIds.length} adet</p>
-                  <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewPatientDetails('${patient.phone}')">Detayları Gör</button>
-              `;
-              list.appendChild(div);
-          });
-      } catch (error) {
-          alert('Hata: ' + error.message);
-      }
+              patients.forEach(patient => {
+                  const div = document.createElement('div');
+                  div.className = 'patient-item';
+                  div.innerHTML = `
+                      <p><strong>Ad:</strong> ${patient.name}</p>
+                      <p><strong>Telefon:</strong> ${patient.phone}</p>
+                      <p><strong>Adres:</strong> ${patient.address || 'Belirtilmemiş'}</p>
+                      <p><strong>Randevular:</strong> ${patient.appointmentIds.length} adet</p>
+                      <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="viewPatientDetails('${patient.phone}')">Detayları Gör</button>
+                  `;
+                  list.appendChild(div);
+              });
+          } catch (error) {
+              alert('Hata: ' + error.message);
+          }
+      }, 300); // 300ms debounce delay
   });
   
   async function cancelAppointment(id) {
