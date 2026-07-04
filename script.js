@@ -14,6 +14,16 @@ const firebaseConfig = {
   let appointments = [];
   let patients = [];
   
+  // Debounce helper function to limit the rate at which a function is executed.
+  function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+          const context = this;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+  }
+
   auth.onAuthStateChanged(user => {
       const authSection = document.getElementById('authSection');
       const contentSection = document.getElementById('contentSection');
@@ -277,7 +287,8 @@ const firebaseConfig = {
       }
   }
   
-  document.getElementById('patientSearch').addEventListener('input', async function(e) {
+  // Apply debounce to the patient search input handler to prevent excessive database queries on every keystroke
+  document.getElementById('patientSearch').addEventListener('input', debounce(async function(e) {
       const searchTerm = e.target.value.toLowerCase();
       const list = document.getElementById('patientList');
       list.innerHTML = '';
@@ -307,7 +318,7 @@ const firebaseConfig = {
       } catch (error) {
           alert('Hata: ' + error.message);
       }
-  });
+  }, 300));
   
   async function cancelAppointment(id) {
       try {
