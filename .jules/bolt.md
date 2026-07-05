@@ -1,0 +1,3 @@
+## 2024-07-05 - Eliminated Unnecessary DB Queries During Search
+**Learning:** Found a performance bottleneck where the `patientSearch` event listener in `script.js` was making a full database query (`await db.collection('patients').get()`) on *every single keystroke*. This is an anti-pattern as it causes excessive and blocking network calls.
+**Action:** Replaced the network call by leveraging the existing `patients` array (which is populated on load) and applying a local `.filter()` during the search. This drastically improves performance, limits DB queries, and avoids wiping out the local cache.
