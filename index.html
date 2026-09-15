@@ -3,119 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Randevu Takip Sistemi</title>
+    <title>Randevu Takip Sistemi | Klinik Yönetim</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto mt-10 max-w-2xl">
-        <h2 class="text-2xl font-bold text-center mb-6">Randevu Takip Sistemi</h2>
-        <!-- Kullanıcı Giriş/Kayıt Formu -->
-        <div id="authSection" class="bg-white p-6 rounded shadow-md mb-6">
-            <h3 class="text-lg font-semibold mb-4" id="authTitle">Giriş Yap</h3>
-            <div id="userInfo" class="hidden mb-4"></div>
-            <!-- Giriş Formu -->
-            <form id="loginForm" class="mb-4">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="email" class="w-full p-2 border rounded" placeholder="E-posta" required>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="password" class="w-full p-2 border rounded" placeholder="Şifre" required>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Giriş Yap</button>
-            </form>
-            <!-- Kayıt Formu -->
-            <form id="registerForm" class="mb-4 hidden">
-                <div class="mb-4">
-                    <label for="registerEmail" class="block text-sm font-medium">E-posta</label>
-                    <input type="email" id="registerEmail" class="w-full p-2 border rounded" placeholder="E-posta" required>
-                </div>
-                <div class="mb-4">
-                    <label for="registerPassword" class="block text-sm font-medium">Şifre</label>
-                    <input type="password" id="registerPassword" class="w-full p-2 border rounded" placeholder="Şifre (min 6 karakter)" required>
-                </div>
-                <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Kayıt Ol</button>
-            </form>
-            <p class="text-center">
-                <a href="#" id="toggleAuth" class="text-blue-500 hover:underline">Kayıt Ol</a>
-            </p>
-            <button id="logoutButton" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 hidden">Çıkış Yap</button>
+<body class="bg-gray-100 min-h-screen">
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <div class="container mx-auto px-4 py-6 max-w-5xl">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-calendar-check text-blue-600 mr-2"></i>Randevu Takip Sistemi
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">Klinik randevu ve hasta yönetim paneli</p>
+            </div>
+            <div id="headerUser" class="mt-3 sm:mt-0 hidden">
+                <span id="userInfo" class="text-sm text-gray-600 mr-3"></span>
+                <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt mr-1"></i>Çıkış
+                </button>
+            </div>
         </div>
-        <!-- İçerik (Giriş yapılmadan gizli) -->
+
+        <div id="authSection" class="bg-white rounded-xl shadow-md p-6 mb-6 max-w-md mx-auto">
+            <h2 class="text-xl font-semibold text-center mb-4" id="authTitle">Giriş Yap</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">E-posta</label>
+                    <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="ornek@klinik.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+                    <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Giriş Yap
+                </button>
+            </form>
+            <form id="registerForm" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">E-posta</label>
+                    <input type="email" id="registerEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="ornek@klinik.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Şifre (min 6 karakter)</label>
+                    <input type="password" id="registerPassword" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition">
+                    <i class="fas fa-user-plus mr-2"></i>Kayıt Ol
+                </button>
+            </form>
+            <p class="text-center mt-4 text-sm">
+                <a href="#" id="toggleAuth" class="text-blue-600 hover:underline">Hesabın yok mu? Kayıt Ol</a>
+            </p>
+        </div>
+
         <div id="contentSection" class="hidden">
-            <!-- Randevu Oluşturma Formu -->
-            <form id="appointmentForm" class="bg-white p-6 rounded shadow-md mb-6">
-                <div class="mb-4">
-                    <label for="patientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="patientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-blue-500">
+                    <div class="text-xs text-gray-500 uppercase tracking-wide">Bugün</div>
+                    <div id="statToday" class="text-2xl font-bold text-gray-800 mt-1">0</div>
+                    <div class="text-xs text-gray-400">randevu</div>
                 </div>
-                <div class="mb-4">
-                    <label for="patientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="patientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
+                <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-green-500">
+                    <div class="text-xs text-gray-500 uppercase tracking-wide">Onaylı</div>
+                    <div id="statConfirmed" class="text-2xl font-bold text-gray-800 mt-1">0</div>
+                    <div class="text-xs text-gray-400">aktif</div>
                 </div>
-                <div class="mb-4">
-                    <label for="patientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="patientAddress" class="w-full p-2 border rounded" placeholder="Adres">
+                <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-yellow-500">
+                    <div class="text-xs text-gray-500 uppercase tracking-wide">Ödeme Bekleyen</div>
+                    <div id="statPendingPay" class="text-2xl font-bold text-gray-800 mt-1">0</div>
+                    <div class="text-xs text-gray-400">randevu</div>
                 </div>
-                <div class="mb-4">
-                    <label for="appointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
-                    <input type="datetime-local" id="appointmentTime" class="w-full p-2 border rounded" required>
+                <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-purple-500">
+                    <div class="text-xs text-gray-500 uppercase tracking-wide">Toplam Hasta</div>
+                    <div id="statPatients" class="text-2xl font-bold text-gray-800 mt-1">0</div>
+                    <div class="text-xs text-gray-400">kayıt</div>
                 </div>
-                <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Randevu Oluştur</button>
-            </form>
-            <!-- Randevu Düzenleme Formu -->
-            <form id="editAppointmentForm" class="bg-white p-6 rounded shadow-md mb-6 hidden">
-                <h3 class="text-lg font-semibold mb-4">Randevu Düzenle</h3>
-                <input type="hidden" id="editAppointmentId">
-                <div class="mb-4">
-                    <label for="editPatientName" class="block text-sm font-medium">Hasta Adı</label>
-                    <input type="text" id="editPatientName" class="w-full p-2 border rounded" placeholder="Hasta Adı" required>
+            </div>
+
+            <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+                <button class="tab-btn active px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600" data-tab="appointments">
+                    <i class="fas fa-calendar-alt mr-1"></i>Randevular
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="new">
+                    <i class="fas fa-plus mr-1"></i>Yeni Randevu
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="patients">
+                    <i class="fas fa-users mr-1"></i>Hastalar
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" data-tab="payment">
+                    <i class="fas fa-credit-card mr-1"></i>Ödeme
+                </button>
+            </div>
+
+            <div id="tab-appointments" class="tab-content">
+                <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex flex-wrap gap-3 items-end">
+                    <div class="flex-1 min-w-[140px]">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Durum</label>
+                        <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            <option value="all">Tümü</option>
+                            <option value="confirmed">Onaylı</option>
+                            <option value="completed">Tamamlandı</option>
+                            <option value="cancelled">İptal</option>
+                            <option value="pending">Beklemede</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[140px]">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Ödeme</label>
+                        <select id="filterPayment" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                            <option value="all">Tümü</option>
+                            <option value="pending">Bekliyor</option>
+                            <option value="paid">Ödendi</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[140px]">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Başlangıç</label>
+                        <input type="date" id="filterDateFrom" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                    <div class="flex-1 min-w-[140px]">
+                        <label class="block text-xs font-medium text-gray-500 mb-1">Bitiş</label>
+                        <input type="date" id="filterDateTo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                    <button id="clearFilters" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg">Temizle</button>
                 </div>
-                <div class="mb-4">
-                    <label for="editPatientPhone" class="block text-sm font-medium">Telefon Numarası</label>
-                    <input type="tel" id="editPatientPhone" class="w-full p-2 border rounded" placeholder="Örn: +905xxxxxxxxx" required>
+                <div id="appointmentList" class="space-y-3"></div>
+                <div id="noAppointments" class="hidden text-center py-12 text-gray-400">
+                    <i class="fas fa-calendar-times text-4xl mb-3"></i>
+                    <p>Filtrelere uygun randevu bulunamadı.</p>
                 </div>
-                <div class="mb-4">
-                    <label for="editPatientAddress" class="block text-sm font-medium">Adres (Opsiyonel)</label>
-                    <input type="text" id="editPatientAddress" class="w-full p-2 border rounded" placeholder="Adres">
-                </div>
-                <div class="mb-4">
-                    <label for="editAppointmentTime" class="block text-sm font-medium">Randevu Zamanı</label>
-                    <input type="datetime-local" id="editAppointmentTime" class="w-full p-2 border rounded" required>
-                </div>
-                <div class="flex justify-between">
-                    <button type="submit" class="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600">Kaydet</button>
-                    <button type="button" id="cancelEdit" class="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">İptal</button>
-                </div>
-            </form>
-            <!-- Ödeme Formu -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Ödeme Onayı</h3>
-                <form id="paymentForm" class="mt-2">
-                    <input type="text" id="cardNumber" class="w-full p-2 border rounded mb-2" placeholder="Kart Numarası (Demo)" required>
-                    <input type="number" id="paymentAmount" class="w-full p-2 border rounded mb-2" placeholder="Ödeme Tutarı (TL)" required>
-                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Ödeme Yap</button>
+            </div>
+
+            <div id="tab-new" class="tab-content hidden">
+                <form id="appointmentForm" class="bg-white rounded-xl shadow-sm p-6 max-w-lg">
+                    <h3 class="text-lg font-semibold mb-4">Yeni Randevu Oluştur</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Hasta Adı *</label>
+                            <input type="text" id="patientName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Ad Soyad" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Telefon *</label>
+                            <input type="tel" id="patientPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="+905xxxxxxxxx" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Adres</label>
+                            <input type="text" id="patientAddress" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Opsiyonel">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Randevu Zamanı *</label>
+                            <input type="datetime-local" id="appointmentTime" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Not / Açıklama</label>
+                            <textarea id="appointmentNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Muayene notu, şikayet vb."></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Başlangıç Durumu</label>
+                            <select id="appointmentStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="confirmed">Onaylı</option>
+                                <option value="pending">Beklemede</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition">
+                            <i class="fas fa-check mr-2"></i>Randevu Oluştur
+                        </button>
+                    </div>
                 </form>
             </div>
-            <!-- Hasta Arama -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Hasta Arama</h3>
-                <input type="text" id="patientSearch" class="w-full p-2 border rounded mb-2" placeholder="Hasta adına göre ara">
+
+            <div id="tab-patients" class="tab-content hidden">
+                <div class="mb-4">
+                    <input type="text" id="patientSearch" class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Hasta adı veya telefon ile ara...">
+                </div>
+                <div id="patientList" class="grid gap-3 sm:grid-cols-2"></div>
+                <div id="noPatients" class="hidden text-center py-12 text-gray-400">
+                    <i class="fas fa-user-slash text-4xl mb-3"></i>
+                    <p>Hasta bulunamadı.</p>
+                </div>
             </div>
-            <!-- Hasta Listesi -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Hasta Kayıtları</h3>
-                <div id="patientList" class="patient-list"></div>
-            </div>
-            <!-- Randevu Listesi -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold">Randevular</h3>
-                <div id="appointmentList" class="appointment-list"></div>
+
+            <div id="tab-payment" class="tab-content hidden">
+                <form id="paymentForm" class="bg-white rounded-xl shadow-sm p-6 max-w-md">
+                    <h3 class="text-lg font-semibold mb-4">Ödeme Kaydı (Demo)</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Randevu Seç</label>
+                            <select id="paymentAppointmentId" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="">— Randevu seçin —</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kart Numarası (Demo)</label>
+                            <input type="text" id="cardNumber" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="4242 4242 4242 4242" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tutar (TL)</label>
+                            <input type="number" id="paymentAmount" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="350" min="1" required>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition">
+                            <i class="fas fa-check-circle mr-2"></i>Ödeme Yap
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Randevu Düzenle</h3>
+                <button id="closeEditModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <form id="editAppointmentForm" class="space-y-4">
+                <input type="hidden" id="editAppointmentId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hasta Adı</label>
+                    <input type="text" id="editPatientName" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                    <input type="tel" id="editPatientPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Adres</label>
+                    <input type="text" id="editPatientAddress" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Zaman</label>
+                    <input type="datetime-local" id="editAppointmentTime" class="w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Durum</label>
+                    <select id="editAppointmentStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="pending">Beklemede</option>
+                        <option value="confirmed">Onaylı</option>
+                        <option value="completed">Tamamlandı</option>
+                        <option value="cancelled">İptal</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Not</label>
+                    <textarea id="editAppointmentNotes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">Kaydet</button>
+                    <button type="button" id="cancelEdit" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="patientModal" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Hasta Kartı</h3>
+                <button id="closePatientModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            </div>
+            <div id="patientModalBody"></div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
